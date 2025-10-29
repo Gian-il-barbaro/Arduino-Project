@@ -21,6 +21,8 @@ const char* htmlPage = R"rawliteral(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle ESP32+Arduino</title>
+
+    <!-- INIZIO CSS -->
     <style>
         html, body {
             background: #121213;
@@ -140,8 +142,11 @@ const char* htmlPage = R"rawliteral(
             cursor: not-allowed;
         }
     </style>
+    <!-- FINE CSS -->
 </head>
 <body>
+
+    <!-- GAME CONTAINER -->
     <div id="game">
         <h1 class="game-title">WORDLE ESP32+ARDUINO</h1>
         <div id="game-status">Connettendo...</div>
@@ -155,11 +160,13 @@ const char* htmlPage = R"rawliteral(
             • Grigio: cifra non presente
         </div>
     </div>
-    
+    <!-- FINE GAME CONTAINER -->
+    <!-- INIZIO JAVASCRIPT -->
     <script>
         const tentativi = 6;
         const numeri = 3;
-        
+
+        // Stato di gioco
         const state = {
             grid: Array(tentativi).fill().map(() => Array(numeri).fill('')),
             currentRow: 0,
@@ -167,11 +174,13 @@ const char* htmlPage = R"rawliteral(
             gameOver: false
         };
         
+        // Gestione WebSocket
         let websocket;
 
+        // Inizializza WebSocket e gestisce eventi 
         function initWebSocket() {
-            const host = window.location.hostname;
-            websocket = new WebSocket('ws://' + host + ':81/');
+            const host = window.location.hostname; // Ottiene l'host corrente
+            websocket = new WebSocket('ws://' + host + ':81/'); // Porta 81 per WebSocket
 
             websocket.onopen = function(event) {
                 updateStatus("Connesso! Inserisci " + numeri + " cifre");
@@ -189,10 +198,12 @@ const char* htmlPage = R"rawliteral(
                 updateStatus("Errore di connessione");
             };
 
+            // Gestione messaggi in arrivo
             websocket.onmessage = function(event) {
-                console.log("Ricevuto:", event.data);
+                console.log("Ricevuto:", event.data); // Debug
                 
-                if (event.data.startsWith("COLORS:")) {
+                // Gestione messaggi specifici
+                if (event.data.startsWith("COLORS:")) { //Gestione messaggio COLORS per colorare le caselle
                   // Trim globale per rimuovere \r\n finali
                   const colorString = event.data.substring(7).trim();
                   // rimuove spazi e CR/LF da ogni elemento
@@ -200,20 +211,22 @@ const char* htmlPage = R"rawliteral(
                   console.log("Parsed COLORS:", colors);
                   applyColorsToCurrentRow(colors);
                 }
-                else if (event.data.startsWith("GAME_OVER:")) {
+                else if (event.data.startsWith("GAME_OVER:")) { // Gestione messaggio GAME_OVER per capire vittoria/sconfitta
                     const result = event.data.substring(10).trim();
                     handleGameOver(result);
                 }
-                else if (event.data === "GAME_START") {
+                else if (event.data === "GAME_START") {// Gestione inizio nuova partita per resettare lo stato e sinctronizzare esp32 e arduino
                     resetGame();
                     updateStatus("Nuova partita - Inserisci " + numeri + " cifre");
                 }
+                
                 else {
                     updateStatus(event.data);
                 }
             };
         }
 
+        // Gestione fine partita
         function handleGameOver(result) {
             state.gameOver = true;
             
@@ -229,13 +242,14 @@ const char* htmlPage = R"rawliteral(
             }, 1500);
         }
 
+        // Applica i colori alle caselle della riga corrente con animazioni
         function applyColorsToCurrentRow(colors) {
         const row = state.currentRow;
         const animationDuration = 500; // ms
 
         for (let col = 0; col < numeri; col++) {
             const box = document.getElementById('box-' + row + '-' + col);
-            // safe read + normalizzazione
+            // pulisci e normalizza il colore
             const raw = (colors[col] || '').trim().toLowerCase();
             const color = raw; // es. 'right', 'wrong', 'empty' o '' se mancante
 
@@ -321,7 +335,7 @@ const char* htmlPage = R"rawliteral(
         }
 
         function getCurrentNumber() {
-            return state.grid[state.currentRow].join('');
+            return state.grid[state.currentRow].join('');// Ottiene la stringa delle cifre inserite nella riga corrente
         }
 
         function revealNumber(number) {
@@ -340,6 +354,7 @@ const char* htmlPage = R"rawliteral(
             state.currentRow = 0;
             state.currentCol = 0;
             state.gameOver = false;
+            updateStatus("Nuova partita - Inserisci " + numeri + " cifre");
             
             // Reset interfaccia
             for (let row = 0; row < tentativi; row++) {
@@ -386,6 +401,7 @@ const char* htmlPage = R"rawliteral(
         // Avvia tutto quando la pagina è caricata
         window.onload = initWebSocket;
     </script>
+    <!-- FINE JAVASCRIPT -->
 </body>
 </html>
 )rawliteral";
@@ -401,7 +417,7 @@ void setup() {
   // Crea Access Point
   WiFi.softAP(ssid, password);
   delay(2000);
-  
+  // Ottieni e stampa l'IP dell'AP
   IPAddress myIP = WiFi.softAPIP();
   Serial.println("Access Point creato!");
   Serial.printf("SSID: %s\n", ssid);
@@ -417,6 +433,7 @@ void setup() {
   
   // Setup WebSocket
   webSocket.begin();
+  // Gestione eventi WebSocket
   webSocket.onEvent([](uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
     switch(type) {
       case WStype_DISCONNECTED:
@@ -436,6 +453,7 @@ void setup() {
           }
         }
         break;
+        // Gestione messaggi in arrivo
       case WStype_TEXT:
         {
           String message = String((char*)payload);
