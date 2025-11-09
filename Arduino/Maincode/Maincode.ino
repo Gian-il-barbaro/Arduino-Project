@@ -123,7 +123,7 @@ void processAttempt(String attempt) {
 
   // Prima passata: cifre corrette nella posizione giusta (right)
   for (int i = 0; i < NUM_DIGITS; i++) {
-    if (attempt[i] == soluzione[i]) {
+    if (attempt.charAt(i) == soluzione[i]) {
       cInput = (int)(attempt.charAt(i)) - 48;
       colors[i] = "right";
       valutati[cInput]++; // incremento il numero di cInput valutati
@@ -179,7 +179,7 @@ void processAttempt(String attempt) {
       // accendo il led di rosso
       colors[i]= "empty";
     }
-    valutati[(int)(attempt[i])]++;
+    valutati[(int)(attempt.charAt(i))]++;
   }
   
   // Costruisce la stringa di colori
