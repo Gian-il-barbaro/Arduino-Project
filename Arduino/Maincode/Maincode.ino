@@ -63,7 +63,6 @@ void loop() {
 }
 
 void processCommand(String command) {
-  //Serial.println("ARDUINO: Ricevuto: " + command);
   
   if (command == "GAME_START") {
     startNewGame();
@@ -75,11 +74,7 @@ void processCommand(String command) {
     }
     
     String attempt = command.substring(4);
-    //if (attempt.length() == NUM_DIGITS && isDigits(attempt)) {
     processAttempt(attempt);
-    //} else {
-      //Serial.println("ERROR: Tentativo non valido");
-    //}
   }
 }
 
@@ -113,14 +108,8 @@ void processAttempt(String attempt) {
   for (int i = 0; i < BASE; i++)
     valutati[i] = 0;
   currentAttemptCount++;
-  
-//  Serial.println("ARDUINO: Tentativo " + String(currentAttemptCount) + ": " + attempt);
-  
   // Calcola i colori per ogni cifra
   String colors[NUM_DIGITS];
- // bool usedInSolution[NUM_DIGITS] = {false, false, false};
-
-
   // Prima passata: cifre corrette nella posizione giusta (right)
   for (int i = 0; i < NUM_DIGITS; i++) {
     if (attempt.charAt(i) == soluzione.charAt(i)) {
@@ -149,7 +138,7 @@ void processAttempt(String attempt) {
     }
   }
   
-  // Seconda passata: cifre corrette ma in posizione sbagliata (wrong)
+  // Seconda passata: cifre corrette ma in posizione sbagliata (wrong) o assenti (empty)
   for (int i = 0; i < NUM_DIGITS; i++) {
     if (colors[i] == "right") continue; // Salta quelle già segnate come right
     cInput = (int)(attempt.charAt(i)) - 48;
@@ -179,7 +168,7 @@ void processAttempt(String attempt) {
       // accendo il led di rosso
       colors[i]= "empty";
     }
-    valutati[(int)(attempt.charAt(i))]++;
+    valutati[cInput]++;
   }
   
   // Costruisce la stringa di colori
@@ -225,17 +214,6 @@ void processAttempt(String attempt) {
     Serial.println("ARDUINO: SCONFITTA - Soluzione: " + soluzione);
   }
 }
-
-/*bool isDigits(String str) {
-  for (int i = 0; i < str.length(); i++) {
-    if (!isDigit(str[i])) {
-      return false;
-    }
-  }
-  return true;
-}*/
-
-
 /**
 	accende un led specifico:
     - redPin è il pin del rosso del led RGB
@@ -243,12 +221,6 @@ void processAttempt(String attempt) {
     - red e green sono le quantità [0, 255] di colore
 */
 void led(int redPin, int greenPin, int red, int green) {
-
-  /*if (redPin == red2) {
-    red = 255 - red;
-    green = 255 - green;
-  }*/
-
   analogWrite(redPin, red);
   analogWrite(greenPin, green);
 }
