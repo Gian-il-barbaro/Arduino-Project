@@ -180,14 +180,6 @@ void processAttempt(String attempt) {
   
   Serial.println(colorString);
   
-  // DEBUG: Stampa i colori per verifica
-  //Serial.print("DEBUG Colors: ");
-  for (int i = 0; i < NUM_DIGITS; i++) {
-    Serial.print(colors[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
-  
   // Controlla vittoria/sconfitta
   bool isWin = true;
   for (int i = 0; i < NUM_DIGITS; i++) {
@@ -221,8 +213,8 @@ void processAttempt(String attempt) {
     - red e green sono le quantità [0, 255] di colore
 */
 void led(int redPin, int greenPin, int red, int green) {
-  analogWrite(redPin, red);
-  analogWrite(greenPin, green);
+  digitalWrite(redPin, red);
+  digitalWrite(greenPin, green);
 }
 
 /**
