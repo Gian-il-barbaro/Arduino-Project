@@ -1,69 +1,117 @@
+ html, body {
+            background: #121213;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        
+        #game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        
+        .game-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        #game-status {
+            color: #b59f3b;
+            text-align: center;
+            margin: 20px;
+            font-size: 1.2em;
+            min-height: 25px;
+            font-weight: bold;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .box {
+            width: 70px;
+            height: 70px;
+            border: 2px solid #3a3a3c;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            border-radius: 8px;
+            background: #3a3a3c;
+        }
+        
+        .box.empty {
+            background: #3a3a3c;
+            border-color: #3a3a3c;
+        }
+        
+        .box.wrong {
+            background: #b59f3b;
+            border-color: #b59f3b;
+        }
+        
+        .box.right {
+            background: #538d4e;
+            border-color: #538d4e;
+        }
+        
+        .animated {
+            animation-name: flip;
+            animation-duration: 0.5s;
+            animation-timing-function: ease;
+            animation-fill-mode: forwards;
+        }
+        
+        @keyframes flip {
+            0% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(0);
+            }
+            100% {
+                transform: scaleY(1);
+            }
+        }
+        
+        .instructions {
+            color: #888;
+            text-align: center;
+            margin-top: 30px;
+            max-width: 400px;
+            line-height: 1.4;
+        }
 
+        #restart-btn {
+            background: #538d4e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: none;
+        }
 
-html,
-body{
-    background: var(--default);
-}
-:root{
-    --default: #121213;
-    --empty: #3a3a3c;
-    --wrong: #b59f3b;
-    --right: #538d4e; 
-}
+        #restart-btn:hover {
+            background: #4a7c45;
+        }
 
-#game{
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 600px;
-}
-
-.grid {
-    display: grid;
-    gap: 4px; /* distanza tra le celle */
-    place-items: center;
-}
-
-
-.box{
-    width: 60px;
-    height: 60px;
-    border : 2px solid var(--empty);
-    margin: 4px;
-    color: white;
-    display: grid;
-    place-items: center;
-    font-family: Arial,Helvetica, sans-serif;
-    
-}
-
-.box.empty{
-    background: var(--empty);
-}
-
-.box.wrong{
-    background: var(--wrong);
-}
-.box.right{
-    background: var(--right);
-}
-
-.animated {
-  animation-name: flip;
-  animation-duration: 0.5s;
-  animation-timing-function: ease;
-  animation-fill-mode: forwards;
-}
-
-
-@keyframes flip {
-  0% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(0);
-  }
-  100% {
-    transform: scaleY(1);
-  }
-}
+        #restart-btn:disabled {
+            background: #3a3a3c;
+            cursor: not-allowed;
+        }
