@@ -2,13 +2,26 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordle</title>
+    <title>Wordle ESP32+Arduino</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id = "game">
+
+    <!-- GAME CONTAINER -->
+    <div id="game">
+        <h1 class="game-title">WORDLE ESP32+ARDUINO</h1>
+        <div id="game-status">Connettendo...</div>
+        <div class="grid" id="grid"></div>
+        <button id="restart-btn" onclick="startNewGame()">Nuova Partita</button>
+        <div class="instructions">
+            <strong>COME GIOCARE:</strong><br>
+            • Inserisci 3 cifre e premi INVIO<br>
+            • Verde: cifra corretta e posizione giusta<br>
+            • Giallo: cifra corretta ma posizione sbagliata<br>
+            • Grigio: cifra non presente
+        </div>
     </div>
     <script src="index.js"></script>
 </body>
