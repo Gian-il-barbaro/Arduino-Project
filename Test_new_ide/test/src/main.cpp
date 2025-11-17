@@ -233,7 +233,8 @@ const char* htmlPage = R"rawliteral(
             if (result === "WIN") {
                 updateStatus("🎉 HAI VINTO! 🎉");
             } else {
-                updateStatus("😞 HAI PERSO! 😞");
+             result = result.substring(4).trim();
+                updateStatus("😞 HAI PERSO! 😞 "+result);
             }
             
             // Mostra il pulsante dopo un breve delay
