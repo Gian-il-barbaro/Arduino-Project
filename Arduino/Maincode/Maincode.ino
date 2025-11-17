@@ -190,9 +190,8 @@ void processAttempt(String attempt) {
         noTone(piezo);
     }
     else if (currentAttemptCount >= MAX_ATTEMPTS) {
-        Serial.println("GAME_OVER:LOSE");
+        Serial.println("GAME_OVER:LOSE La soluzione era: " + soluzione);
         gameActive = false;
-        Serial.println("ARDUINO: SCONFITTA - Soluzione: " + soluzione);
     }
 }
 
